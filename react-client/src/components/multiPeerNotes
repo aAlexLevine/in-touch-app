@@ -1,0 +1,34 @@
+
+you need to maintain a peer object for every connection
+-so still need two peer creations for every connection, 
+  one on initiator side and one on receiver side 
+  and they both have to exchange their signal data
+
+every peer object operates on its own 1 to 1 channel
+-rather than it being a relay to get the stream and being used to listen for others
+
+(peerjs)peer ids are for the connection, there is one peer id between 2 people
+(simple-peer) one initiator, but each end of the peer must signal
+
+i join a room with someone in it
+ my joining triggers server to tell all in room i joined 
+
+the person in the room calls me - how 
+
+walkie talkie that can only transmit/recieve on one channel 
+ you need a walkie talkie for each person 
+ and in turn they need a walkie talkie for each person 
+
+ if you have 3 friends, you need 3 walkie talkies
+
+///////
+
+//i join
+  // i emit that i joined pass along my socket id- server relays it to all in room
+  // everyone in room calls me - i am the receiver
+  //when i receive the call, connect and respond with my signal data from new peer connection
+
+  //set listneer for when someone joins
+  //when someone new joins, call them with a peer connection ,you are the initiator
+
+  //outside of peer connection listen for the response from the newly joined, and connect. (peer.signal)
