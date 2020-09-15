@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack -d",
     "react-dev": "webpack-dev-server --config webpack.config.js ----history-api-fallback",
-    "start": "nodemon server/index.js",
+    "start": "node server/index.js",
+    "server-dev": "nodemon server/index.js",
     "lint": "eslint"
   },
   "author": "aalexlevine",
