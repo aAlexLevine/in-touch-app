@@ -1,40 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ChatMessagesList from './ChatMessagesList';
 import ChatComposeMessage from './ChatComposeMessage';
-// import io from 'socket.io-client';
 
-const ChatContainer = ({socket}) => {
+const ChatContainer = ({ socket }) => {
   const [messages, setMessages] = useState([]);
-  // const [socket, setSocket] = useState(false);
+  const newestMessageRef = useRef();
 
   const updateMessages = (message) => {
     setMessages((prevMessages) => [...prevMessages, message]);
+    newestMessageRef.current.scrollIntoView(false);
   };
 
   const sendMessage = (message) => {
     socket.emit('sendMessage', message);
   };
-console.log('chat container render')
+  console.log('chat container render');
   useEffect(() => {
-    if(!socket) return
-    // const ioSocket = io();
-    // ioSocket.on('connect', function () {
-    //   console.log('client connected')
-    // });
+    if (!socket) return;
 
     socket.on('receiveMessage', (msg) => {
       updateMessages(msg);
     });
-    // setSocket(ioSocket);
-    // return () => {
-    //   ioSocket.close();
-    //   setSocket(false);
-    // };
   }, [socket]);
 
   return (
-    <div>
-      <ChatMessagesList messages={messages} />
+    <div className="outline">
+      <ChatMessagesList
+        messages={messages}
+        newestMessageRef={newestMessageRef}
+      />
       <ChatComposeMessage sendMessage={sendMessage} />
     </div>
   );

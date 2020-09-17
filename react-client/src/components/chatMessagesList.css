@@ -1,0 +1,6 @@
+.messagesList {
+  background-color: white;
+  height: 300px;
+  /* margin: 5px 30px */
+  overflow: scroll;
+}

@@ -1,10 +1,11 @@
 import React from 'react';
+import './chatMessagesList.css'
 
-const ChatMessagesList = ({ messages }) => {
+const ChatMessagesList = ({ messages, newestMessageRef }) => {
   return (
-    <div>
+    <div className="messagesList outline" ref={newestMessageRef}>
       {messages.map((msg, idx) => (
-        <div key={idx}>{msg}</div>
+        <div key={idx} ref={newestMessageRef}>{msg}</div>
       ))}
     </div>
   );

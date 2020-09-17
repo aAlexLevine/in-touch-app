@@ -1,4 +1,11 @@
 import React, { useState } from 'react';
+import {
+  Form,
+  InputGroup,
+  InputGroupAddon,
+  FormInput,
+  Button,
+} from 'shards-react';
 
 const ChatComposeMessage = ({ sendMessage }) => {
   const [messageText, setMessageText] = useState('');
@@ -15,10 +22,15 @@ const ChatComposeMessage = ({ sendMessage }) => {
 
   return (
     <div>
-      <form onSubmit={hanldeSubmit}>
-        <input type="text" value={messageText} onChange={handleChange} />
-        <button type="submit">Send</button>
-      </form>
+      <Form onSubmit={hanldeSubmit}>
+        <label>Compose message...</label>
+        <InputGroup>
+          <FormInput onChange={handleChange} value={messageText} />
+          <InputGroupAddon type="append">
+            <Button type="submit">Send</Button>
+          </InputGroupAddon>
+        </InputGroup>
+      </Form>
     </div>
   );
 };

@@ -1,3 +1,26 @@
+.app-container {
+  /* background-image: url('../images/connect.svg');
+  background-repeat: no-repeat, repeat;
+  height: 100%;
+  width: 100% */
+    /* background: url('../images/connect.svg') no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover; */
+}
 
-
-
+.outline {
+  border: 1px solid #dde7ee;
+  border-radius: 12px;
+    /* text-align: center; */
+    padding: 15px 15px;
+    /* font-size: 10px; */
+    /* background: #fcfdfd; */
+    color: #5080a0;
+}
+/* 
+.messagesList {
+  background-color: yellow;
+  height: 500px
+} */

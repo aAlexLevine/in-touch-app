@@ -1,37 +1,35 @@
 import React from 'react';
 import './App.css';
-// import DropdownMenu from './DropdownMenu';
-// import Chat from './Chat';
-// import { useEffect } from 'react';
-// import Test from './Test';
-import Box from './Box';
+import { Container, Row, Col } from 'shards-react';
 import ChatContainer from './ChatContainer';
-import VideoContainer from './VideoContainer';
 import useSocket from './useSocket';
-import TestVid from './TestVid';
-import AnotherTestVid from './AnotherTestVid';
-import VideoStreamContainer from './VideoStreamContainer';
-import testVid from './TestVid';
 import VideoConnections from './VideoConnections';
+import NavigationBar from './NavigationBar';
 
 const App = () => {
   console.log('app render');
   const socket = useSocket();
   return (
-    <div>
-      {/* <Box /> */}
-      {/* <TestVid /> */}
-      {/* <AnotherTestVid /> */}
-      <ChatContainer socket={socket} />
-      {/* <VideoContainer socket={socket} /> */}
-      {/* <VideoStreamContainer socket={socket}/>  */}
-      <VideoConnections socket={socket}/>
-      {/* drop down menu here heeeep */}
-      {/* <DropdownMenu options={[1, 2, 3]} /> */}
-      {/* <Test /> */}
-      {/* <input onChange={() => console.log('-----')}></input> */}
-      {/* <Chat/> */}
-      {/* <TestVid /> */}
+    <div className="app-container">
+      <div>
+        <NavigationBar />
+        <Container>
+          <Row>
+            <Col>
+              {/* <VideoConnections socket={socket} /> */}
+              <div className="outline">Videos go here.</div>
+            </Col>
+            <Col>
+              <ChatContainer socket={socket} />
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+            <div className="outline">test</div>
+            </Col>
+          </Row>
+        </Container>
+      </div>
     </div>
   );
 };
