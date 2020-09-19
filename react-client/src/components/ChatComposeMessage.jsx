@@ -24,7 +24,7 @@ const ChatComposeMessage = ({ sendMessage }) => {
     <div>
       <Form onSubmit={hanldeSubmit}>
         <label>Compose message...</label>
-        <InputGroup>
+        <InputGroup size="sm" seamless>
           <FormInput onChange={handleChange} value={messageText} />
           <InputGroupAddon type="append">
             <Button type="submit">Send</Button>

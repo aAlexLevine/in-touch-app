@@ -24,7 +24,7 @@ const ChatContainer = ({ socket }) => {
   }, [socket]);
 
   return (
-    <div className="outline">
+    <div className="outline chatContainer">
       <ChatMessagesList
         messages={messages}
         newestMessageRef={newestMessageRef}

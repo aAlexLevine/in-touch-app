@@ -3,7 +3,7 @@
   background-repeat: no-repeat, repeat;
   height: 100%;
   width: 100% */
-    /* background: url('../images/connect.svg') no-repeat center center fixed; 
+  /* background: url('../images/connect.svg') no-repeat center center fixed; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -11,16 +11,102 @@
 }
 
 .outline {
-  border: 1px solid #dde7ee;
+  /* border: 1px solid #dde7ee; */
   border-radius: 12px;
-    /* text-align: center; */
-    padding: 15px 15px;
-    /* font-size: 10px; */
-    /* background: #fcfdfd; */
-    color: #5080a0;
+  /* text-align: center; */
+  padding: 15px 15px;
+  /* font-size: 10px; */
+  background-color: #fff;
+  /* color: #5080a0; */
+}
+
+.first-row {
+  /* height: 400px; */
+  height: calc(100vh - 90px);
+  /* flex-grow: 1; */
+  margin: 20px 0 20px 0;
+}
+
+.chatContainer {
+  /* min-height: 400px; */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  /* height: 60%; */
+  height: calc(60vh - 45px);
+}
+
+.video-container {
+  height: 100%;
+}
+
+.rightPanel {
+  /* display: flex;
+  flex-direction: column;
+  justify-content: space-around; */
+  height: 100%;
 }
 /* 
 .messagesList {
   background-color: yellow;
   height: 500px
 } */
+
+.other {
+  /* height: 40%; */
+  /* height: calc(40vh - 90px);
+  overflow: auto */
+}
+
+.participantsList {
+  overflow: auto;
+  height: calc(40vh - 45px);
+  margin-top: 15px;
+}
+
+.video-mask {
+  width: 225px;
+  height: 225px;
+  border-radius: 125px;
+  -webkit-mask-image: -webkit-radial-gradient(circle, white 100%, black 100%);
+}
+
+.video {
+  width: 300px;
+  height: 300px;
+  position: absolute;
+  /* top: 2px; */
+  /* left: -15px; */
+  top: -37px;
+  /* left: 265px; */
+  left: -30px;
+}
+
+.video-container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.videoRow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.videoCol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+label {
+  margin-top: .5rem;
+}
+
+.listItem {
+  margin-bottom: 10px;
+  border: none;
+  background-color: red;
+}

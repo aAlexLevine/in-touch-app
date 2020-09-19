@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Container, Row, Col } from 'shards-react';
 import useUserMedia from './useUserMedia';
 import Video from './Video';
 import Peer from 'simple-peer';
@@ -64,7 +65,7 @@ const VideoConnections = ({ socket }) => {
               track.stop();
             });
           }
-          stream.remoteID !== remotePeerID;
+          return stream.remoteID !== remotePeerID;
         })
       );
       const remotePeer = peers.current.find((peer) => peer.id === remotePeerID);
@@ -98,13 +99,28 @@ const VideoConnections = ({ socket }) => {
   }, [mySocketID, mediaStream]);
 
   return (
-    <div style={{ border: '2px solid blue' }}>
-      <Video stream={mediaStream} />
-      {streams.map((stream, index) => (
-        <Video stream={stream.remoteStream} key={index} />
-      ))}
-      Videos go here.
-    </div>
+    <Container>
+      <Row className="videoRow">
+        <Col xs="auto">
+          <div className="videoCol">
+            <Video stream={mediaStream} />
+          </div>
+        </Col>
+        {streams.map((stream, index) => (
+          <Col xs="auto" key={index}>
+            <div className="videoCol">
+              <Video stream={stream.remoteStream} />
+            </div>
+          </Col>
+        ))}
+      </Row>
+      {/* <div>
+        <Video stream={mediaStream} />
+        {streams.map((stream, index) => (
+          <Video stream={stream.remoteStream} key={index} />
+        ))}
+      </div> */}
+    </Container>
   );
 };
 

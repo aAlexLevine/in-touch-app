@@ -5,6 +5,7 @@ import ChatContainer from './ChatContainer';
 import useSocket from './useSocket';
 import VideoConnections from './VideoConnections';
 import NavigationBar from './NavigationBar';
+import ParticipantsList from './ParticipantsList';
 
 const App = () => {
   console.log('app render');
@@ -13,19 +14,19 @@ const App = () => {
     <div className="app-container">
       <div>
         <NavigationBar />
-        <Container>
-          <Row>
-            <Col>
-              {/* <VideoConnections socket={socket} /> */}
-              <div className="outline">Videos go here.</div>
+
+        <Container fluid>
+          <Row className="first-row">
+            <Col lg="8">
+              <div className="outline video-container">
+                <VideoConnections socket={socket} />
+              </div>
             </Col>
-            <Col>
-              <ChatContainer socket={socket} />
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-            <div className="outline">test</div>
+            <Col lg="4">
+              <div className="rightPanel">
+                <ChatContainer socket={socket} />
+                <ParticipantsList />
+              </div>
             </Col>
           </Row>
         </Container>

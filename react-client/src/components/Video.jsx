@@ -8,8 +8,9 @@ const Video = ({ stream }) => {
   }, [stream]);
 
   return (
-    <div>
+    <div className="video-mask">
       <video
+      className="video"
         muted
         ref={videoRef}
         onCanPlay={(e) => {
@@ -17,7 +18,7 @@ const Video = ({ stream }) => {
         }}
         autoPlay
         playsInline
-        style={{ objectFit: 'contain', height: '100px', width: '100px' }}
+        // style={{ objectFit: 'contain', height: '100px', width: '100px' }}
       ></video>
     </div>
   );
