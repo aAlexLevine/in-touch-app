@@ -1,6 +1,5 @@
 import React from 'react';
 import { Nav, NavbarBrand, NavItem, NavLink } from 'shards-react';
-import './navigationBar.css'
 
 const NavigationBar = () => {
   return (

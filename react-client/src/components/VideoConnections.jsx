@@ -3,12 +3,13 @@ import { Container, Row, Col } from 'shards-react';
 import useUserMedia from './useUserMedia';
 import Video from './Video';
 import Peer from 'simple-peer';
+import { useParams } from 'react-router-dom';
 
 const VideoConnections = ({ socket }) => {
   const mediaStream = useUserMedia({ video: true, audio: true });
-  const [mySocketID, setMySocketID] = useState(null);
   const peers = useRef([]);
   const [streams, setStreams] = useState([]);
+  const { roomName } = useParams();
 
   const createPeerConnection = (isInitiator, to, from, connection = null) => {
     const peer = new Peer({
@@ -50,39 +51,31 @@ const VideoConnections = ({ socket }) => {
     return { id: to, peer };
   };
 
-  useEffect(() => {
-    if (!socket) return;
-
-    socket.on('connect', () => {
-      setMySocketID(socket.id);
-    });
-
-    const removePeer = (remotePeerID) => {
-      setStreams((prevState) =>
-        prevState.filter((stream) => {
-          if (stream.remoteID === remotePeerID) {
-            stream.remoteStream.getTracks().forEach((track) => {
-              track.stop();
-            });
-          }
-          return stream.remoteID !== remotePeerID;
-        })
-      );
-      const remotePeer = peers.current.find((peer) => peer.id === remotePeerID);
-      remotePeer.peer.destroy();
-    };
-
-    socket.on('removeRemotePeer', removePeer);
-  }, [socket]);
+  const removePeer = (remotePeerID) => {
+    setStreams((prevState) =>
+      prevState.filter((stream) => {
+        if (stream.remoteID === remotePeerID) {
+          stream.remoteStream.getTracks().forEach((track) => {
+            track.stop();
+          });
+        }
+        return stream.remoteID !== remotePeerID;
+      })
+    );
+    const remotePeer = peers.current.find((peer) => peer.id === remotePeerID);
+    remotePeer.peer.destroy();
+  };
 
   useEffect(() => {
-    if (!mySocketID || !mediaStream) return;
+    if (!socket || !mediaStream) return;
 
-    const user = { id: mySocketID };
+    const mySocketID = socket.id;
+    const user = { id: mySocketID, room: roomName };
 
-    socket.emit('joined', user);
+    socket.emit('joinRoom', user);
 
     socket.on('receiveJoinedUser', ({ id }) => {
+      console.log('receiveJoinedUser', id);
       const newPeer = createPeerConnection(true, id, mySocketID, null);
       peers.current.push(newPeer);
     });
@@ -96,7 +89,19 @@ const VideoConnections = ({ socket }) => {
         initiatorPeer.peer.signal(connection);
       }
     });
-  }, [mySocketID, mediaStream]);
+
+    socket.on('removeRemotePeer', removePeer);
+
+    return () => {
+      //right now remove peer fires when someone completely closes out
+      //set it up so on unmount the user disconnects their own peer,
+      //not sure if socket needs to be dsconnected but they should socket.leave room
+      console.log('VideoConnections Cleanup');
+      socket.off('receiveJoinedUser');
+      socket.off('receiveCall');
+      socket.off('removeRemotePeer');
+    };
+  }, [socket, mediaStream]);
 
   return (
     <Container>
@@ -114,12 +119,6 @@ const VideoConnections = ({ socket }) => {
           </Col>
         ))}
       </Row>
-      {/* <div>
-        <Video stream={mediaStream} />
-        {streams.map((stream, index) => (
-          <Video stream={stream.remoteStream} key={index} />
-        ))}
-      </div> */}
     </Container>
   );
 };

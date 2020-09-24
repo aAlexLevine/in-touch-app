@@ -21,6 +21,10 @@ const ChatContainer = ({ socket }) => {
     socket.on('receiveMessage', (msg) => {
       updateMessages(msg);
     });
+
+    return () => {
+      socket.off('receiveMessage')
+    }
   }, [socket]);
 
   return (

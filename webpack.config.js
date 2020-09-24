@@ -45,11 +45,12 @@ module.exports = {
     ],
   },
   devServer: {
+    historyApiFallback: true,
     port: 8080,
     hot: true,
     open: false,
     proxy: {
-      '/': {
+      '/api': {
         target: 'http://localhost:3000',
         // pathRewrite: { '^/api': '' },
       },

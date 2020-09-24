@@ -1,39 +1,73 @@
 import React from 'react';
-import { ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText } from 'shards-react';
+import {
+  ListGroup,
+  ListGroupItem,
+  ListGroupItemHeading,
+  ListGroupItemText,
+} from 'shards-react';
 
 const ParticipantsList = () => {
   const overRide = {
     marginBottom: '10px',
     border: 'none',
-    borderRadius: '12px'
+    borderRadius: '8px',
+  };
+
+  const icon = {
+    display: 'flex',
+    alignSelf: 'flex-start'
+
   };
   return (
     <div className="participantsList">
-      {/* <label>Participants</label> */}
-      <ListGroup flush="false">
-        <ListGroupItem style={overRide}>
+      <ListGroup flush={false}>
+        <ListGroupItem className= "listGroupItem-first" style={overRide}>
           {/* <ListGroupItemHeading> */}
-          <span class="fa-stack fa-2x">
-            <i class="fas fa-circle fa-stack-2x"></i>
-            <i class="fas fa-users fa-stack-1x fa-inverse"></i>
-          </span>
-          Room Name
-          {/* <i class="fas fa-users"></i> Room123 */}
+            <span>
+              Active Rooms
+              </span>
           {/* </ListGroupItemHeading> */}
-          {/* <ListGroupItemText> 1</ListGroupItemText> */}
+          {/* Room Name */}
         </ListGroupItem>
         <ListGroupItem style={overRide}>
-          <i class="fas fa-user-circle fa-2x"></i>1
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <i className="fas fa-user-circle fa-2x"></i>
+            <div className="listItemName">User Name</div>
+            <span className="dot"></span>
+          </div>
         </ListGroupItem>
         <ListGroupItem style={overRide}>
-          <i class="fas fa-user-circle"></i>2
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <i className="fas fa-user-circle fa-2x"></i>
+            <div className="listItemName">User Name</div>
+
+            <span className="dot"></span>
+          </div>
         </ListGroupItem>
-        {/* <ListGroupItem>3</ListGroupItem>
-        <ListGroupItem>4</ListGroupItem>
-        <ListGroupItem>1</ListGroupItem>
-        <ListGroupItem>2</ListGroupItem>
-        <ListGroupItem>3</ListGroupItem>
-        <ListGroupItem>4</ListGroupItem> */}
+        <ListGroupItem style={overRide}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <i className="fas fa-user-circle fa-2x"></i>
+            <div className="listItemName">User Name</div>
+
+            <span className="dot"></span>
+          </div>
+        </ListGroupItem>
+        <ListGroupItem style={overRide}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <i className="fas fa-user-circle fa-2x"></i>
+            <div className="listItemName">User Name</div>
+
+            <span className="dot"></span>
+          </div>
+        </ListGroupItem>
+        <ListGroupItem style={overRide}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <i className="fas fa-user-circle fa-2x"></i>
+            <div className="listItemName">User Name</div>
+
+            <span className="dot"></span>
+          </div>
+        </ListGroupItem>
       </ListGroup>
     </div>
   );

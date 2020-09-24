@@ -10,9 +10,15 @@
   background-size: cover; */
 }
 
+.navigationBar-container {
+  padding: 0px 20px;
+  background-color: white;
+  /* box-shadow: rgba(17, 31, 93, 0.08) 3px 0px 30px, rgba(27, 27, 43, 0.09) 2px 0px 5px */
+}
+
 .outline {
   /* border: 1px solid #dde7ee; */
-  border-radius: 12px;
+  border-radius: 8px;
   /* text-align: center; */
   padding: 15px 15px;
   /* font-size: 10px; */
@@ -51,6 +57,15 @@
   background-color: yellow;
   height: 500px
 } */
+
+.messagesList {
+  background-color: white;
+  /* height: 300px; */
+  height: 100%;
+  /* max-height: 300px; */
+  /* margin: 5px 30px */
+  overflow: scroll;
+}
 
 .other {
   /* height: 40%; */
@@ -105,8 +120,34 @@ label {
   margin-top: .5rem;
 }
 
-.listItem {
-  margin-bottom: 10px;
-  border: none;
-  background-color: red;
+.dot {
+  height: 10px;
+  width: 10px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: auto;
+  /* align-self: flex-end; */
+  /* right: -15px; */
+}
+
+.listItemName {
+  margin-left: 10px;
+}
+
+.homeRow {
+   display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.home-container {
+  width: 50vh; 
+}
+
+.listGroupItem-first {
+  /* font-size: 20px;
+  display: flex;
+    align-items: center;
+    justify-content: center; */
 }

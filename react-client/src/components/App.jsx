@@ -6,37 +6,57 @@ import useSocket from './useSocket';
 import VideoConnections from './VideoConnections';
 import NavigationBar from './NavigationBar';
 import ParticipantsList from './ParticipantsList';
+import Home from './Home';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 const App = () => {
   console.log('app render');
   const socket = useSocket();
+  console.log('socket in app', socket);
   return (
     <div className="app-container">
-      <div>
+      <Router>
         <NavigationBar />
-
-        <Container fluid>
-          <Row className="first-row">
-            <Col lg="8">
-              <div className="outline video-container">
-                <VideoConnections socket={socket} />
-              </div>
-            </Col>
-            <Col lg="4">
-              <div className="rightPanel">
-                <ChatContainer socket={socket} />
-                <ParticipantsList />
-              </div>
-            </Col>
-          </Row>
-        </Container>
-      </div>
+        <Switch>
+          <>
+            <Container fluid>
+              <Route
+                exact
+                path="/"
+                render={(props) => (
+                  <Row className="first-row homeRow">
+                    <Col xs="auto">
+                      <Home {...props} socket={socket} />
+                    </Col>
+                  </Row>
+                )}
+              />
+              <Route
+                path="/room/:roomName"
+                render={(props) => (
+                  <>
+                    <Row className="first-row">
+                      <Col lg="8">
+                        <div className="outline video-container">
+                          <VideoConnections {...props} socket={socket} />
+                        </div>
+                      </Col>
+                      <Col lg="4">
+                        <div className="rightPanel">
+                          <ChatContainer socket={socket} />
+                          <ParticipantsList />
+                        </div>
+                      </Col>
+                    </Row>
+                  </>
+                )}
+              />
+            </Container>
+          </>
+        </Switch>
+      </Router>
     </div>
   );
 };
 
 export default App;
-
-// proxy: {
-//       '/': 'http://localhost:3000',
-//     },

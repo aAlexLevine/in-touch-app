@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const io = require('socket.io')(http, {
   pingTimeout: 60000,
 });
+const path = require('path');
 
 app.use(express.static(__dirname + '/../react-client/dist'));
 app.use(bodyParser.json());
@@ -17,42 +18,43 @@ app.post('/contact', (req, res) => {
 io.on('connection', (socket) => {
   console.log('socket connected', socket.id);
 
-  socket.on('joined', (user) => {
-    console.log('user joined');
-    socket.broadcast.emit('receiveJoinedUser', user);
-    io.emit('receiveMessage', `${user.id} has joined.`)
+  socket.on('joinRoom', (user) => {
+    const room = `_room_${user.room}`;
+    socket.join(room);
+    socket.broadcast.emit('allRooms', io.sockets.adapter.rooms);
+    console.log(`'joinRoom' - user: ${user.id} joined room: ${room}`);
+    //emit to all except the newly joined to initiate peer connection
+    socket.to(room).emit('receiveJoinedUser', user);
+    //emit to all user has joined their room
+    io.in(room).emit('receiveMessage', `${user.id} has joined.`);
+  });
+
+  socket.on('getAllRooms', () => {
+    console.log('getAllRooms');
+    socket.emit('allRooms', io.sockets.adapter.rooms);
   });
 
   socket.on('createPeerConnection', (call) => {
     io.to(call.to).emit('receiveCall', call);
-    console.log(
-      'creating first half of peer connection--', 'to:', call.to,
-      'from', call.from
-    );
-  });
-
-  socket.on('test', (msg) => {
-    console.log('test', msg);
-    socket.emit('testserver', msg);
+    console.log(`creating half of peer connection-- to: ${call.to} 'from: ${call.from}`)
   });
 
   socket.on('sendMessage', (msg) => {
+    // ** TODO: direct messages to the specified room
     io.emit('receiveMessage', msg);
-    console.log(socket.adapter.rooms);
   });
 
-  // socket.on('addStream', (stream) => {
-  //   socket.broadcast.emit('receiveStream', stream)
-  //   console.log('received stream trigger')
-  // })
-
-  //broadcast to all but disconnecter
   socket.on('disconnect', () => {
+    // ** TODO: direct messages to the specified room
     io.emit('removeRemotePeer', socket.id);
     io.emit('receiveMessage', `${socket.id} has left.`);
     console.log('user disconnected', socket.id);
   });
 });
+
+// app.all('/*', function(req, res) {
+//   res.redirect('/');
+// });
 
 let port = process.env.PORT || 3000;
 
