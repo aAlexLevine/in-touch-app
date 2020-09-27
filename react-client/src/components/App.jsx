@@ -12,7 +12,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 const App = () => {
   console.log('app render');
   const socket = useSocket();
-  console.log('socket in app', socket);
+
   return (
     <div className="app-container">
       <Router>
@@ -34,7 +34,6 @@ const App = () => {
               <Route
                 path="/room/:roomName"
                 render={(props) => (
-                  <>
                     <Row className="first-row">
                       <Col lg="8">
                         <div className="outline video-container">
@@ -48,7 +47,6 @@ const App = () => {
                         </div>
                       </Col>
                     </Row>
-                  </>
                 )}
               />
             </Container>

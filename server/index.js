@@ -5,7 +5,6 @@ const bodyParser = require('body-parser');
 const io = require('socket.io')(http, {
   pingTimeout: 60000,
 });
-const path = require('path');
 
 app.use(express.static(__dirname + '/../react-client/dist'));
 app.use(bodyParser.json());
@@ -21,16 +20,18 @@ io.on('connection', (socket) => {
   socket.on('joinRoom', (user) => {
     const room = `_room_${user.room}`;
     socket.join(room);
-    socket.broadcast.emit('allRooms', io.sockets.adapter.rooms);
+    socket.userName = user.userName
+    console.log(socket.userName)
+    io.emit('allRooms', io.sockets.adapter.rooms);
     console.log(`'joinRoom' - user: ${user.id} joined room: ${room}`);
     //emit to all except the newly joined to initiate peer connection
     socket.to(room).emit('receiveJoinedUser', user);
-    //emit to all user has joined their room
-    io.in(room).emit('receiveMessage', `${user.id} has joined.`);
+    //emit to all, user has joined their room
+    io.in(room).emit('receiveMessage', {author: 'ServerBot', text: `${user.userName} has joined.`});
   });
 
   socket.on('getAllRooms', () => {
-    console.log('getAllRooms');
+    // console.log('getAllRooms');
     socket.emit('allRooms', io.sockets.adapter.rooms);
   });
 
@@ -41,15 +42,41 @@ io.on('connection', (socket) => {
 
   socket.on('sendMessage', (msg) => {
     // ** TODO: direct messages to the specified room
-    io.emit('receiveMessage', msg);
+    const room = `_room_${msg.room}`;
+    io.in(room).emit('receiveMessage', msg);
   });
 
+  const leaveRoom = (room) => {
+    socket.leave(room);
+    socket.to(room).emit('removeRemotePeer', socket.id);
+    socket.to(room).emit('receiveMessage', {author: 'ServerBot', text: `${socket.userName} has left.`});
+    io.emit('allRooms', io.sockets.adapter.rooms);
+    console.log(`user: ${socket.userName} @ ${socket.id} has left: ${room}`);
+  }
+
+  socket.on('leaveRoom', (roomName) => {
+    const room = `_room_${roomName}`;
+    leaveRoom(room)
+  })
+
+  socket.on('disconnecting', () => {
+    const rooms = socket.rooms
+    for (let room in rooms) {
+      // User should only be in two rooms at a time,
+      // their personal room from socketio and one joined room.
+      // We can limit one call to leaveRoom if need be.
+      // For now incase a user is able to join more than one room this
+      // should clean it up.
+      // if (room.slice(0, 6) === '_room_') {
+        leaveRoom(room)
+      // }
+    }
+  })
+
   socket.on('disconnect', () => {
-    // ** TODO: direct messages to the specified room
-    io.emit('removeRemotePeer', socket.id);
-    io.emit('receiveMessage', `${socket.id} has left.`);
     console.log('user disconnected', socket.id);
   });
+
 });
 
 // app.all('/*', function(req, res) {

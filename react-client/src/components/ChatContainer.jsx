@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ChatMessagesList from './ChatMessagesList';
 import ChatComposeMessage from './ChatComposeMessage';
+import {useLocation, useParams} from 'react-router-dom';
 
 const ChatContainer = ({ socket }) => {
   const [messages, setMessages] = useState([]);
   const newestMessageRef = useRef();
+  const { roomName } = useParams();
+  const { userName } = useLocation();
 
   const updateMessages = (message) => {
     setMessages((prevMessages) => [...prevMessages, message]);
@@ -12,7 +15,8 @@ const ChatContainer = ({ socket }) => {
   };
 
   const sendMessage = (message) => {
-    socket.emit('sendMessage', message);
+    const msg = {author: userName, text: message, room: roomName}
+    socket.emit('sendMessage', msg);
   };
   console.log('chat container render');
   useEffect(() => {

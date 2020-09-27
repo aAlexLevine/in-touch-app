@@ -5,8 +5,12 @@ import {
   ListGroupItemHeading,
   ListGroupItemText,
 } from 'shards-react';
+import { useParams, useLocation } from 'react-router-dom';
 
 const ParticipantsList = () => {
+  const { roomName } = useParams();
+  const { userName } = useLocation();
+
   const overRide = {
     marginBottom: '10px',
     border: 'none',
@@ -18,16 +22,12 @@ const ParticipantsList = () => {
     alignSelf: 'flex-start'
 
   };
+  console.log('room', roomName, 'userName', userName)
   return (
     <div className="participantsList">
       <ListGroup flush={false}>
         <ListGroupItem className= "listGroupItem-first" style={overRide}>
-          {/* <ListGroupItemHeading> */}
-            <span>
-              Active Rooms
-              </span>
-          {/* </ListGroupItemHeading> */}
-          {/* Room Name */}
+          Room:{roomName} User: {userName}
         </ListGroupItem>
         <ListGroupItem style={overRide}>
           <div style={{ display: 'flex', alignItems: 'center' }}>

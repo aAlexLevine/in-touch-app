@@ -4,16 +4,27 @@ import {
   Button,
   FormInput,
   InputGroup,
-  InputGroupAddon,
   Form,
 } from 'shards-react';
 import RoomList from './RoomList';
 import { useHistory } from 'react-router-dom';
+import { roomNameIsValid, userNameisValid } from './homeUtils.js';
+
+const fakeRooms = [
+  { name: 'Code Review', isOpen: false },
+  { name: 'Marketing Dept...', isOpen: false },
+  { name: 'Product Updates', isOpen: false },
+  { name: 'SomeMeeting', isOpen: false },
+  { name: 'AnotherMeeting', isOpen: false },
+];
 
 const Home = ({ socket }) => {
   const [createRoomCollapse, setCreateRoomCollapse] = useState(false);
   const [rooms, setRooms] = useState([]);
   const [roomName, setRoomName] = useState('');
+  const [userName, setUserName] = useState('');
+  const [isRoomNameInvalid, setIsRoomNameInvalid] = useState(false);
+  const [isUserNameInvalid, setIsUserNameInvalid] = useState(false);
   let history = useHistory();
 
   const toggleCreateRoomCollapse = () => {
@@ -21,29 +32,56 @@ const Home = ({ socket }) => {
   };
 
   const toggleRoomIsOpen = (roomName) => {
-    console.log('toggleroom', roomName);
     const roomsToggled = rooms.map((room) => {
       if (room.name === roomName) {
         room.isOpen = !room.isOpen;
+      } else {
+        room.isOpen = false;
       }
       return room;
     });
     setRooms(roomsToggled);
   };
 
+  const handleUserName = (event) => {
+    setIsUserNameInvalid(false);
+    setUserName(event.target.value);
+  };
+
   const handleJoinRoom = (roomName) => {
-    //after type name and submit
     event.preventDefault();
-    history.push(`/room/${roomName}`);
+    const userNameClean = userName.trim();
+    if (userNameisValid(userNameClean)) {
+      history.push({ pathname: `/room/${roomName}`, userName: userNameClean });
+    } else {
+      setIsUserNameInvalid(true);
+    }
   };
 
   const handleRoomName = (event) => {
+    setIsRoomNameInvalid(false);
     setRoomName(event.target.value);
   };
 
   const handleCreateRoom = (event) => {
     event.preventDefault();
-    history.push(`/room/${roomName}`);
+    const roomNameClean = roomName.trim();
+    const userNameClean = userName.trim();
+    if (!roomNameIsValid(rooms, roomNameClean)) {
+      setIsRoomNameInvalid(true);
+    }
+    if (!userNameisValid(userNameClean)) {
+      setIsUserNameInvalid(true);
+    }
+    if (
+      userNameisValid(userNameClean) &&
+      roomNameIsValid(rooms, roomNameClean)
+    ) {
+      history.push({
+        pathname: `/room/${roomNameClean}`,
+        userName: userNameClean,
+      });
+    }
   };
 
   const getRoomsWithNames = (allRooms) => {
@@ -68,11 +106,11 @@ const Home = ({ socket }) => {
     socket.on('allRooms', (allRooms) => {
       console.log('heard allRooms', allRooms);
       setRooms(getRoomsWithNames(allRooms));
+      // setRooms(fakeRooms);
     });
     return () => {
       console.log('home clean up');
       socket.off('allRooms');
-      //fix disconnects socket.leave add socket.off to video and chat components also
     };
   }, [socket]);
 
@@ -85,14 +123,24 @@ const Home = ({ socket }) => {
             room.
           </p>
           <Form onSubmit={handleCreateRoom}>
-            <InputGroup>
-              <FormInput onChange={handleRoomName} value={roomName} />
-              <InputGroupAddon type="append">
-                <Button type="submit" outline theme="secondary">
-                  +
-                </Button>
-              </InputGroupAddon>
+            <InputGroup className="mb-2">
+              <FormInput
+                onChange={handleUserName}
+                placeholder="User Name"
+                invalid={isUserNameInvalid}
+              />
             </InputGroup>
+            <InputGroup className="mb-2">
+              <FormInput
+                onChange={handleRoomName}
+                value={roomName}
+                placeholder="Room Name"
+                invalid={isRoomNameInvalid}
+              />
+            </InputGroup>
+            <Button type="submit" block theme="secondary">
+              Join
+            </Button>
           </Form>
         </div>
       </Collapse>
@@ -103,6 +151,8 @@ const Home = ({ socket }) => {
         rooms={rooms}
         toggleRoomIsOpen={toggleRoomIsOpen}
         handleJoinRoom={handleJoinRoom}
+        handleUserName={handleUserName}
+        isUserNameInvalid={isUserNameInvalid}
       />
     </div>
   );

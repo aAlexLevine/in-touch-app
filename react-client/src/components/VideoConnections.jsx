@@ -3,13 +3,14 @@ import { Container, Row, Col } from 'shards-react';
 import useUserMedia from './useUserMedia';
 import Video from './Video';
 import Peer from 'simple-peer';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 
 const VideoConnections = ({ socket }) => {
   const mediaStream = useUserMedia({ video: true, audio: true });
   const peers = useRef([]);
   const [streams, setStreams] = useState([]);
   const { roomName } = useParams();
+  const { userName } = useLocation();
 
   const createPeerConnection = (isInitiator, to, from, connection = null) => {
     const peer = new Peer({
@@ -55,6 +56,7 @@ const VideoConnections = ({ socket }) => {
     setStreams((prevState) =>
       prevState.filter((stream) => {
         if (stream.remoteID === remotePeerID) {
+          console.log('remote tracks cleanup')
           stream.remoteStream.getTracks().forEach((track) => {
             track.stop();
           });
@@ -70,7 +72,7 @@ const VideoConnections = ({ socket }) => {
     if (!socket || !mediaStream) return;
 
     const mySocketID = socket.id;
-    const user = { id: mySocketID, room: roomName };
+    const user = { id: mySocketID, room: roomName, userName };
 
     socket.emit('joinRoom', user);
 
@@ -93,10 +95,8 @@ const VideoConnections = ({ socket }) => {
     socket.on('removeRemotePeer', removePeer);
 
     return () => {
-      //right now remove peer fires when someone completely closes out
-      //set it up so on unmount the user disconnects their own peer,
-      //not sure if socket needs to be dsconnected but they should socket.leave room
       console.log('VideoConnections Cleanup');
+      socket.emit('leaveRoom', roomName)
       socket.off('receiveJoinedUser');
       socket.off('receiveCall');
       socket.off('removeRemotePeer');

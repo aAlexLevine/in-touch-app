@@ -5,7 +5,7 @@ const ChatMessagesList = ({ messages, newestMessageRef }) => {
     <div className="messagesList outline" ref={newestMessageRef}>
       {messages.map((msg, idx) => (
         <div key={idx} ref={newestMessageRef}>
-          {msg}
+          {msg.author}: {msg.text}
         </div>
       ))}
     </div>
