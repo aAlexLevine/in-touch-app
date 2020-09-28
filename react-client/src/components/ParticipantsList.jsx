@@ -5,28 +5,38 @@ import { useParams, useLocation } from 'react-router-dom';
 const ParticipantsList = ({socket}) => {
   const { roomName } = useParams();
   const { userName } = useLocation();
-  const [participants, setParticipants] = useState();
+  const [participants, setParticipants] = useState([]);
 
   useEffect(() => {
+    if (!socket) return
     socket.on('roomParticipants', (users) => {
       console.log('**********', users)
+      setParticipants(users)
     });
-  })
+    return () => {
+      socket.off('roomParticipants')
+    }
+  }, [])
 
   return (
     <div className="participantsList">
       <ListGroup flush={false}>
         <ListGroupItem className="listGroupItem-first" style={overRide}>
-          Room:{roomName} User: {userName}
+          <span style={{fontSize: '20px'}}>
+            {roomName} 
+            </span>
         </ListGroupItem>
-        <ListGroupItem style={overRide}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <i className="fas fa-user-circle fa-2x"></i>
-            <div className="listItemName">User Name</div>
-            <span className="dot"></span>
-          </div>
-        </ListGroupItem>
-        <ListGroupItem style={overRide}>
+        {participants.map((participant) => (
+          <ListGroupItem style={overRide} key={participant.id}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <i className="fas fa-user-circle fa-2x"></i>
+        <div className="listItemName">{participant.userName}</div>
+              <span className="dot"></span>
+            </div>
+          </ListGroupItem>
+
+        ))}
+        {/* <ListGroupItem style={overRide}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <i className="fas fa-user-circle fa-2x"></i>
             <div className="listItemName">User Name</div>
@@ -57,7 +67,7 @@ const ParticipantsList = ({socket}) => {
 
             <span className="dot"></span>
           </div>
-        </ListGroupItem>
+        </ListGroupItem> */}
       </ListGroup>
     </div>
   );

@@ -17,15 +17,24 @@ app.post('/contact', (req, res) => {
 io.on('connection', (socket) => {
   console.log('socket connected', socket.id);
 
+  const updateUsersInRoom = (room) => {
+    io.in(room).clients((error, clients) => {
+      if (error) console.log(error);
+      const users = [];
+      for (client of clients) {
+        const userName = io.sockets.sockets[client].userName;
+        users.push({ userName, id: client });
+      }
+      io.in(room).emit('roomParticipants', users);
+    });
+  };
+
   socket.on('joinRoom', (user) => {
-    const room = `_room_${user.room}`;
+    const room = `_room_${user.room}`;  
     socket.join(room);
     socket.userName = user.userName
-    console.log(socket.userName)
     io.emit('allRooms', io.sockets.adapter.rooms);
-    io.in(room).emit('roomParticipants', io.sockets.adapter.rooms[room].sockets);
-io.sockets.sockets[socket_id];//get users names from their ids
-
+    updateUsersInRoom(room);
     console.log(`'joinRoom' - user: ${user.id} joined room: ${room}`);
     //emit to all except the newly joined to initiate peer connection
     socket.to(room).emit('receiveJoinedUser', user);
@@ -33,16 +42,9 @@ io.sockets.sockets[socket_id];//get users names from their ids
     io.in(room).emit('receiveMessage', {author: 'ServerBot', text: `${user.userName} has joined.`});
   });
 
-  // socket.on('getParticipants', (roomName) => {
-  //   const room = `_room_${roomName}`;
-  //   console.log('********',io.sockets.adapter.rooms[room])
-  //   // console.log('*******', io.adapter.rooms[room])
-  // })
 
   socket.on('getAllRooms', () => {
-    // console.log('getAllRooms');
     socket.emit('allRooms', io.sockets.adapter.rooms);
-    console.log('-----', io.sockets.adapter.rooms);
   });
 
   socket.on('createPeerConnection', (call) => {
@@ -51,7 +53,6 @@ io.sockets.sockets[socket_id];//get users names from their ids
   });
 
   socket.on('sendMessage', (msg) => {
-    // ** TODO: direct messages to the specified room
     const room = `_room_${msg.room}`;
     io.in(room).emit('receiveMessage', msg);
   });
@@ -60,6 +61,7 @@ io.sockets.sockets[socket_id];//get users names from their ids
     socket.leave(room);
     socket.to(room).emit('removeRemotePeer', socket.id);
     socket.to(room).emit('receiveMessage', {author: 'ServerBot', text: `${socket.userName} has left.`});
+    updateUsersInRoom(room)
     io.emit('allRooms', io.sockets.adapter.rooms);
     console.log(`user: ${socket.userName} @ ${socket.id} has left: ${room}`);
   }
@@ -77,9 +79,9 @@ io.sockets.sockets[socket_id];//get users names from their ids
       // We can limit one call to leaveRoom if need be.
       // For now incase a user is able to join more than one room this
       // should clean it up.
-      // if (room.slice(0, 6) === '_room_') {
+      if (room.slice(0, 6) === '_room_') {
         leaveRoom(room)
-      // }
+      }
     }
   })
 
