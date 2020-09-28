@@ -10,18 +10,12 @@ import {
   Form,
 } from 'shards-react';
 
-const overRide = {
-  marginBottom: '10px',
-  border: 'none',
-  borderRadius: '8px',
-};
-
 const RoomList = ({
   rooms,
   toggleRoomIsOpen,
   handleJoinRoom,
   handleUserName,
-  isUserNameInvalid
+  isUserNameInvalid,
 }) => {
   return (
     <div className="participantsList">
@@ -33,9 +27,7 @@ const RoomList = ({
                 onClick={() => toggleRoomIsOpen(room.name)}
                 style={{ display: 'flex', alignItems: 'center' }}
               >
-                {/* <i className="fab fa-creative-commons-sampling fa-2x"></i> */}
                 <i className="fab fa-connectdevelop fa-2x"></i>
-                {/* <i className="far fa-circle fa-2x"></i> */}
                 <div className="listItemName">{room.name}</div>
                 <span className="dot"></span>
               </div>
@@ -48,11 +40,10 @@ const RoomList = ({
                   onChange={handleUserName}
                 >
                   <InputGroup>
-                    {/* handle name input from joiner, 
-                send name to video connections,
-                decide how to transport name and room data
-                can send through params or lift state up  */}
-                    <FormInput placeholder="User Name" invalid={isUserNameInvalid}/>
+                    <FormInput
+                      placeholder="User Name"
+                      invalid={isUserNameInvalid}
+                    />
                     <InputGroupAddon type="append">
                       <Button outline theme="secondary">
                         Join
@@ -67,6 +58,12 @@ const RoomList = ({
       </ListGroup>
     </div>
   );
+};
+
+const overRide = {
+  marginBottom: '10px',
+  border: 'none',
+  borderRadius: '8px',
 };
 
 export default RoomList;

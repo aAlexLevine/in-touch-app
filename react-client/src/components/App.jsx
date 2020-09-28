@@ -43,7 +43,7 @@ const App = () => {
                       <Col lg="4">
                         <div className="rightPanel">
                           <ChatContainer socket={socket} />
-                          <ParticipantsList />
+                          <ParticipantsList socket={socket}/>
                         </div>
                       </Col>
                     </Row>

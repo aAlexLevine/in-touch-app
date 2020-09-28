@@ -1,32 +1,22 @@
-import React from 'react';
-import {
-  ListGroup,
-  ListGroupItem,
-  ListGroupItemHeading,
-  ListGroupItemText,
-} from 'shards-react';
+import React, { useState, useEffect } from 'react';
+import { ListGroup, ListGroupItem } from 'shards-react';
 import { useParams, useLocation } from 'react-router-dom';
 
-const ParticipantsList = () => {
+const ParticipantsList = ({socket}) => {
   const { roomName } = useParams();
   const { userName } = useLocation();
+  const [participants, setParticipants] = useState();
 
-  const overRide = {
-    marginBottom: '10px',
-    border: 'none',
-    borderRadius: '8px',
-  };
+  useEffect(() => {
+    socket.on('roomParticipants', (users) => {
+      console.log('**********', users)
+    });
+  })
 
-  const icon = {
-    display: 'flex',
-    alignSelf: 'flex-start'
-
-  };
-  console.log('room', roomName, 'userName', userName)
   return (
     <div className="participantsList">
       <ListGroup flush={false}>
-        <ListGroupItem className= "listGroupItem-first" style={overRide}>
+        <ListGroupItem className="listGroupItem-first" style={overRide}>
           Room:{roomName} User: {userName}
         </ListGroupItem>
         <ListGroupItem style={overRide}>
@@ -72,4 +62,16 @@ const ParticipantsList = () => {
     </div>
   );
 };
+
+  const overRide = {
+    marginBottom: '10px',
+    border: 'none',
+    borderRadius: '8px',
+  };
+
+  // const icon = {
+  //   display: 'flex',
+  //   alignSelf: 'flex-start',
+  // };
+
 export default ParticipantsList;

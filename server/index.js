@@ -23,6 +23,9 @@ io.on('connection', (socket) => {
     socket.userName = user.userName
     console.log(socket.userName)
     io.emit('allRooms', io.sockets.adapter.rooms);
+    io.in(room).emit('roomParticipants', io.sockets.adapter.rooms[room].sockets);
+io.sockets.sockets[socket_id];//get users names from their ids
+
     console.log(`'joinRoom' - user: ${user.id} joined room: ${room}`);
     //emit to all except the newly joined to initiate peer connection
     socket.to(room).emit('receiveJoinedUser', user);
@@ -30,9 +33,16 @@ io.on('connection', (socket) => {
     io.in(room).emit('receiveMessage', {author: 'ServerBot', text: `${user.userName} has joined.`});
   });
 
+  // socket.on('getParticipants', (roomName) => {
+  //   const room = `_room_${roomName}`;
+  //   console.log('********',io.sockets.adapter.rooms[room])
+  //   // console.log('*******', io.adapter.rooms[room])
+  // })
+
   socket.on('getAllRooms', () => {
     // console.log('getAllRooms');
     socket.emit('allRooms', io.sockets.adapter.rooms);
+    console.log('-----', io.sockets.adapter.rooms);
   });
 
   socket.on('createPeerConnection', (call) => {
