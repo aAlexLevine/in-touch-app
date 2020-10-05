@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useParams, useLocation } from 'react-router-dom';
 import { Container, Row, Col } from 'shards-react';
+import Peer from 'simple-peer';
 import useUserMedia from './useUserMedia';
 import Video from './Video';
-import Peer from 'simple-peer';
-import { useParams, useLocation } from 'react-router-dom';
 
 const VideoConnections = ({ socket }) => {
   const mediaStream = useUserMedia({ video: true, audio: true });
@@ -56,7 +56,7 @@ const VideoConnections = ({ socket }) => {
     setStreams((prevState) =>
       prevState.filter((stream) => {
         if (stream.remoteID === remotePeerID) {
-          console.log('remote tracks cleanup')
+          console.log('remote tracks cleanup');
           stream.remoteStream.getTracks().forEach((track) => {
             track.stop();
           });
@@ -96,7 +96,7 @@ const VideoConnections = ({ socket }) => {
 
     return () => {
       console.log('VideoConnections Cleanup');
-      socket.emit('leaveRoom', roomName)
+      socket.emit('leaveRoom', roomName);
       socket.off('receiveJoinedUser');
       socket.off('receiveCall');
       socket.off('removeRemotePeer');

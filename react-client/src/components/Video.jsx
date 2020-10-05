@@ -11,7 +11,7 @@ const Video = ({ stream }) => {
     <div className="video-mask">
       <video
       className="video"
-        muted
+        // muted
         ref={videoRef}
         onCanPlay={(e) => {
           e.target.play();

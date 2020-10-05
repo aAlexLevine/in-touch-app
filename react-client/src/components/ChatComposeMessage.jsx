@@ -10,7 +10,7 @@ import {
 const ChatComposeMessage = ({ sendMessage }) => {
   const [messageText, setMessageText] = useState('');
 
-  const hanldeSubmit = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     sendMessage(messageText);
     setMessageText('');
@@ -22,7 +22,7 @@ const ChatComposeMessage = ({ sendMessage }) => {
 
   return (
     <div>
-      <Form onSubmit={hanldeSubmit}>
+      <Form onSubmit={handleSubmit}>
         <label>Compose message...</label>
         <InputGroup size="sm" seamless>
           <FormInput onChange={handleChange} value={messageText} />

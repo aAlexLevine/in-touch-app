@@ -30,18 +30,20 @@ io.on('connection', (socket) => {
   };
 
   socket.on('joinRoom', (user) => {
-    const room = `_room_${user.room}`;  
+    const room = `_room_${user.room}`;
     socket.join(room);
-    socket.userName = user.userName
+    socket.userName = user.userName;
     io.emit('allRooms', io.sockets.adapter.rooms);
     updateUsersInRoom(room);
     console.log(`'joinRoom' - user: ${user.id} joined room: ${room}`);
-    //emit to all except the newly joined to initiate peer connection
+    //  emit to all except the newly joined to initiate peer connection
     socket.to(room).emit('receiveJoinedUser', user);
-    //emit to all, user has joined their room
-    io.in(room).emit('receiveMessage', {author: 'ServerBot', text: `${user.userName} has joined.`});
+    //  emit to all, user has joined their room
+    io.in(room).emit('receiveMessage', {
+      author: 'ServerBot',
+      text: `${user.userName} has joined.`,
+    });
   });
-
 
   socket.on('getAllRooms', () => {
     socket.emit('allRooms', io.sockets.adapter.rooms);
@@ -49,7 +51,9 @@ io.on('connection', (socket) => {
 
   socket.on('createPeerConnection', (call) => {
     io.to(call.to).emit('receiveCall', call);
-    console.log(`creating half of peer connection-- to: ${call.to} 'from: ${call.from}`)
+    console.log(
+      `creating half of peer connection-- to: ${call.to} 'from: ${call.from}`
+    );
   });
 
   socket.on('sendMessage', (msg) => {
@@ -60,19 +64,24 @@ io.on('connection', (socket) => {
   const leaveRoom = (room) => {
     socket.leave(room);
     socket.to(room).emit('removeRemotePeer', socket.id);
-    socket.to(room).emit('receiveMessage', {author: 'ServerBot', text: `${socket.userName} has left.`});
-    updateUsersInRoom(room)
+    socket
+      .to(room)
+      .emit('receiveMessage', {
+        author: 'ServerBot',
+        text: `${socket.userName} has left.`,
+      });
+    updateUsersInRoom(room);
     io.emit('allRooms', io.sockets.adapter.rooms);
     console.log(`user: ${socket.userName} @ ${socket.id} has left: ${room}`);
-  }
+  };
 
   socket.on('leaveRoom', (roomName) => {
     const room = `_room_${roomName}`;
-    leaveRoom(room)
-  })
+    leaveRoom(room);
+  });
 
   socket.on('disconnecting', () => {
-    const rooms = socket.rooms
+    const rooms = socket.rooms;
     for (let room in rooms) {
       // User should only be in two rooms at a time,
       // their personal room from socketio and one joined room.
@@ -80,15 +89,14 @@ io.on('connection', (socket) => {
       // For now incase a user is able to join more than one room this
       // should clean it up.
       if (room.slice(0, 6) === '_room_') {
-        leaveRoom(room)
+        leaveRoom(room);
       }
     }
-  })
+  });
 
   socket.on('disconnect', () => {
     console.log('user disconnected', socket.id);
   });
-
 });
 
 // app.all('/*', function(req, res) {

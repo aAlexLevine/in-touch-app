@@ -13,13 +13,13 @@ every peer object operates on its own 1 to 1 channel
 i join a room with someone in it
  my joining triggers server to tell all in room i joined 
 
-the person in the room calls me - how 
+the person in the room calls me
 
 walkie talkie that can only transmit/recieve on one channel 
  you need a walkie talkie for each person 
  and in turn they need a walkie talkie for each person 
 
- if you have 3 friends, you need 3 walkie talkies
+ if you have 3 friends, you need 3 walkie talkies (you need 3 peer objects)
 
 ///////
 

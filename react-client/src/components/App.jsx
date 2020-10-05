@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
 import { Container, Row, Col } from 'shards-react';
 import ChatContainer from './ChatContainer';
@@ -7,7 +8,6 @@ import VideoConnections from './VideoConnections';
 import NavigationBar from './NavigationBar';
 import ParticipantsList from './ParticipantsList';
 import Home from './Home';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 const App = () => {
   console.log('app render');
@@ -34,19 +34,19 @@ const App = () => {
               <Route
                 path="/room/:roomName"
                 render={(props) => (
-                    <Row className="first-row">
-                      <Col lg="8">
-                        <div className="outline video-container">
-                          <VideoConnections {...props} socket={socket} />
-                        </div>
-                      </Col>
-                      <Col lg="4">
-                        <div className="rightPanel">
-                          <ChatContainer socket={socket} />
-                          <ParticipantsList socket={socket}/>
-                        </div>
-                      </Col>
-                    </Row>
+                  <Row className="first-row">
+                    <Col lg="8">
+                      <div className="outline video-container">
+                        <VideoConnections {...props} socket={socket} />
+                      </div>
+                    </Col>
+                    <Col lg="4">
+                      <div className="rightPanel">
+                        <ChatContainer socket={socket} />
+                        <ParticipantsList socket={socket} />
+                      </div>
+                    </Col>
+                  </Row>
                 )}
               />
             </Container>

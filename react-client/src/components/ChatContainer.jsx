@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 import ChatMessagesList from './ChatMessagesList';
 import ChatComposeMessage from './ChatComposeMessage';
-import {useLocation, useParams} from 'react-router-dom';
 
 const ChatContainer = ({ socket }) => {
   const [messages, setMessages] = useState([]);
@@ -15,20 +15,20 @@ const ChatContainer = ({ socket }) => {
   };
 
   const sendMessage = (message) => {
-    const msg = {author: userName, text: message, room: roomName}
+    const msg = { author: userName, text: message, room: roomName };
     socket.emit('sendMessage', msg);
   };
   console.log('chat container render');
   useEffect(() => {
-    if (!socket) return;
+    if (!socket) return null;
 
     socket.on('receiveMessage', (msg) => {
       updateMessages(msg);
     });
 
     return () => {
-      socket.off('receiveMessage')
-    }
+      socket.off('receiveMessage');
+    };
   }, [socket]);
 
   return (

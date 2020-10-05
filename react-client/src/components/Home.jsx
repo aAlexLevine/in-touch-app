@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   Collapse,
   Button,
@@ -7,7 +8,6 @@ import {
   Form,
 } from 'shards-react';
 import RoomList from './RoomList';
-import { useHistory } from 'react-router-dom';
 import { roomNameIsValid, userNameisValid } from './homeUtils.js';
 
 const fakeRooms = [
