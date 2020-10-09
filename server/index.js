@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 
 const app = express();
 const http = require('http').createServer(app);
@@ -7,13 +8,8 @@ const io = require('socket.io')(http, {
   pingTimeout: 60000,
 });
 
-app.use(express.static(__dirname + '/../react-client/dist'));
+app.use(express.static(path.join(__dirname, '/../react-client/dist')));
 app.use(bodyParser.json());
-
-app.post('/contact', (req, res) => {
-  console.log('------', req.body);
-  res.send(req.body.msg);
-});
 
 io.on('connection', (socket) => {
   console.log('socket connected', socket.id);
@@ -21,11 +17,10 @@ io.on('connection', (socket) => {
   const updateUsersInRoom = (room) => {
     io.in(room).clients((error, clients) => {
       if (error) console.log(error);
-      const users = [];
-      for (client of clients) {
-        const userName = io.sockets.sockets[client].userName;
-        users.push({ userName, id: client });
-      }
+      const users = clients.map((client) => {
+        const { userName } = io.sockets.sockets[client];
+        return { userName, id: client };
+      });
       io.in(room).emit('roomParticipants', users);
     });
   };
@@ -68,7 +63,7 @@ io.on('connection', (socket) => {
     socket
       .to(room)
       .emit('receiveMessage', {
-        author: 'ServerBot',
+        author: '--ServerBot--',
         text: `${socket.userName} has left.`,
       });
     updateUsersInRoom(room);
@@ -82,21 +77,22 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnecting', () => {
-    const rooms = socket.rooms;
-    for (let room in rooms) {
-      // User should only be in two rooms at a time,
-      // their personal room from socketio and one joined room.
-      // We can limit one call to leaveRoom if need be.
-      // For now incase a user is able to join more than one room this
-      // should clean it up.
+    const rooms = Object.keys(socket.rooms);
+    rooms.forEach((room) => {
       if (room.slice(0, 6) === '_room_') {
         leaveRoom(room);
       }
-    }
+    });
+    // User should only be in two rooms at a time,
+    // their personal room from socketio and one joined room.
+    // We can limit one call to leaveRoom if need be.
+    // For now incase a user is able to join more than one room this
+    // should clean it up.
   });
 
   socket.on('disconnect', () => {
     console.log('user disconnected', socket.id);
+    socket.removeAllListeners();
   });
 });
 
@@ -104,7 +100,7 @@ io.on('connection', (socket) => {
 //   res.redirect('/');
 // });
 
-let port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
 http.listen(port, () => {
   console.log(`listening on port ${port}*!`);

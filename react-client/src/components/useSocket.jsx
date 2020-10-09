@@ -1,11 +1,14 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 
+// const socket = io()
+
 const useSocket = () => {
-  const { current: socket } = useRef(io());
+  const [socket] = useState(io);
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
+    console.log('useSocketUseEffect');
     socket.on('connect', () => {
       setIsConnected(true);
       console.log('socket connected:', socket.id);

@@ -72,6 +72,7 @@ const VideoConnections = ({ socket }) => {
       }));
       const remotePeer = peers.current.find((peer) => peer.id === remotePeerID);
       remotePeer.peer.destroy();
+      peers.current = peers.current.filter((peer) => peer.id !== remotePeerID);
     };
 
     socket.emit('joinRoom', user);
