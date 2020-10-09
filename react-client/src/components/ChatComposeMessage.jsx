@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import {
   Form,
   InputGroup,
@@ -23,9 +24,9 @@ const ChatComposeMessage = ({ sendMessage }) => {
   return (
     <div>
       <Form onSubmit={handleSubmit}>
-        <label>Compose message...</label>
+        <label htmlFor="messageSubmit">Compose message...</label>
         <InputGroup size="sm" seamless>
-          <FormInput onChange={handleChange} value={messageText} />
+          <FormInput id="messageSubmit" onChange={handleChange} value={messageText} />
           <InputGroupAddon type="append">
             <Button type="submit">Send</Button>
           </InputGroupAddon>
@@ -33,6 +34,10 @@ const ChatComposeMessage = ({ sendMessage }) => {
       </Form>
     </div>
   );
+};
+
+ChatComposeMessage.propTypes = {
+  sendMessage: PropTypes.func.isRequired,
 };
 
 export default ChatComposeMessage;

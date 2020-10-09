@@ -2,9 +2,9 @@ const roomNameIsValid = (rooms, roomName) => {
   if (roomName === '') {
     return false;
   }
-  const roomAlreadyExists = rooms.some((room) => {
-    room.name.toLowerCase() === roomName.toLowerCase();
-  });
+  const roomAlreadyExists = rooms.some((room) => (
+    room.name.toLowerCase() === roomName.toLowerCase()
+  ));
   if (roomAlreadyExists) {
     return false;
   }
@@ -18,7 +18,4 @@ const userNameisValid = (name) => {
   return true;
 };
 
-export { 
-  roomNameIsValid, 
-  userNameisValid 
-};
+export { roomNameIsValid, userNameisValid };

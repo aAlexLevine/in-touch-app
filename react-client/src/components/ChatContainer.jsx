@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 import { useLocation, useParams } from 'react-router-dom';
 import ChatMessagesList from './ChatMessagesList';
 import ChatComposeMessage from './ChatComposeMessage';
@@ -18,10 +19,9 @@ const ChatContainer = ({ socket }) => {
     const msg = { author: userName, text: message, room: roomName };
     socket.emit('sendMessage', msg);
   };
-  console.log('chat container render');
-  useEffect(() => {
-    if (!socket) return null;
 
+  useEffect(() => {
+    // if (!socket) return;
     socket.on('receiveMessage', (msg) => {
       updateMessages(msg);
     });
@@ -40,6 +40,10 @@ const ChatContainer = ({ socket }) => {
       <ChatComposeMessage sendMessage={sendMessage} />
     </div>
   );
+};
+
+ChatContainer.propTypes = {
+  socket: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 export default ChatContainer;

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import {
   Collapse,
@@ -8,15 +9,15 @@ import {
   Form,
 } from 'shards-react';
 import RoomList from './RoomList';
-import { roomNameIsValid, userNameisValid } from './homeUtils.js';
+import { roomNameIsValid, userNameisValid } from './homeUtils';
 
-const fakeRooms = [
-  { name: 'Code Review', isOpen: false },
-  { name: 'Marketing Dept...', isOpen: false },
-  { name: 'Product Updates', isOpen: false },
-  { name: 'SomeMeeting', isOpen: false },
-  { name: 'AnotherMeeting', isOpen: false },
-];
+// const fakeRooms = [
+//   { name: 'Code Review', isOpen: false },
+//   { name: 'Marketing Dept...', isOpen: false },
+//   { name: 'Product Updates', isOpen: false },
+//   { name: 'SomeMeeting', isOpen: false },
+//   { name: 'AnotherMeeting', isOpen: false },
+// ];
 
 const Home = ({ socket }) => {
   const [createRoomCollapse, setCreateRoomCollapse] = useState(false);
@@ -25,15 +26,15 @@ const Home = ({ socket }) => {
   const [userName, setUserName] = useState('');
   const [isRoomNameInvalid, setIsRoomNameInvalid] = useState(false);
   const [isUserNameInvalid, setIsUserNameInvalid] = useState(false);
-  let history = useHistory();
+  const history = useHistory();
 
   const toggleCreateRoomCollapse = () => {
     setCreateRoomCollapse((prevCollapse) => !prevCollapse);
   };
 
-  const toggleRoomIsOpen = (roomName) => {
+  const toggleRoomIsOpen = (roomSelected) => {
     const roomsToggled = rooms.map((room) => {
-      if (room.name === roomName) {
+      if (room.name === roomSelected) {
         room.isOpen = !room.isOpen;
       } else {
         room.isOpen = false;
@@ -48,11 +49,14 @@ const Home = ({ socket }) => {
     setUserName(event.target.value);
   };
 
-  const handleJoinRoom = (roomName) => {
+  const handleJoinRoom = (event, roomSelected) => {
     event.preventDefault();
     const userNameClean = userName.trim();
     if (userNameisValid(userNameClean)) {
-      history.push({ pathname: `/room/${roomName}`, userName: userNameClean });
+      history.push({
+        pathname: `/room/${roomSelected}`,
+        userName: userNameClean,
+      });
     } else {
       setIsUserNameInvalid(true);
     }
@@ -74,8 +78,8 @@ const Home = ({ socket }) => {
       setIsUserNameInvalid(true);
     }
     if (
-      userNameisValid(userNameClean) &&
-      roomNameIsValid(rooms, roomNameClean)
+      userNameisValid(userNameClean)
+      && roomNameIsValid(rooms, roomNameClean)
     ) {
       history.push({
         pathname: `/room/${roomNameClean}`,
@@ -101,7 +105,7 @@ const Home = ({ socket }) => {
   };
 
   useEffect(() => {
-    if (!socket) return;
+    // if (!socket) return undefined;
     socket.emit('getAllRooms');
     socket.on('allRooms', (allRooms) => {
       console.log('heard allRooms', allRooms);
@@ -156,6 +160,10 @@ const Home = ({ socket }) => {
       />
     </div>
   );
+};
+
+Home.propTypes = {
+  socket: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 export default Home;

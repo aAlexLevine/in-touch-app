@@ -1,4 +1,5 @@
 const express = require('express');
+
 const app = express();
 const http = require('http').createServer(app);
 const bodyParser = require('body-parser');
@@ -105,6 +106,6 @@ io.on('connection', (socket) => {
 
 let port = process.env.PORT || 3000;
 
-http.listen(port, function () {
+http.listen(port, () => {
   console.log(`listening on port ${port}*!`);
 });

@@ -1,14 +1,13 @@
-import React, { useRef, useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import io from 'socket.io-client';
 
 const useSocket = () => {
-  const [socketClient, setSocketClient] = useState();
+  const { current: socket } = useRef(io());
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    const socket = io();
-
     socket.on('connect', () => {
-      setSocketClient(socket);
+      setIsConnected(true);
       console.log('socket connected:', socket.id);
     });
 
@@ -28,8 +27,9 @@ const useSocket = () => {
       socket.close();
       console.log('socket closed on cleanup');
     };
-  }, []);
-  return socketClient;
+  }, [socket]);
+
+  return [socket, isConnected];
 };
 
 export default useSocket;

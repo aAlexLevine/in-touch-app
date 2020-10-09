@@ -1,10 +1,31 @@
 {
-  "extends": ["airbnb", "plugin:react-hooks/recommended"],
+  "extends": ["airbnb", "airbnb/hooks"],
   "env": {
     "browser": true,
     "es6": true
   },
   "rules": {
-    "no-console": "off"
+    "no-console": "off",
+    "no-param-reassign": ["error", { "props": false }],
+    "comma-dangle": [
+      "error",
+      {
+        "arrays": "always-multiline",
+        "exports": "always-multiline",
+        "functions": "never",
+        "imports": "always-multiline",
+        "objects": "always-multiline"
+      }
+    ],
+    "jsx-a11y/label-has-associated-control": [
+      2,
+      {
+        "labelComponents": [],
+        "labelAttributes": [],
+        "controlComponents": [],
+        "assert": "either",
+        "depth": 3
+      }
+    ]
   }
 }
