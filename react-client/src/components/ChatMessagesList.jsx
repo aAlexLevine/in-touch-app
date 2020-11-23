@@ -1,19 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const ChatMessagesList = ({ messages, newestMessageRef }) => {
-  return (
-    <div className="messagesList outline" ref={newestMessageRef}>
-      {messages.map((msg, idx) => (
-        <div key={idx} ref={newestMessageRef}>
-          {msg.author}
-          :
-          {msg.text}
-        </div>
-      ))}
-    </div>
-  );
-};
+const ChatMessagesList = ({ messages, newestMessageRef }) => (
+  <div className="messagesList outline" ref={newestMessageRef}>
+    {messages.map((msg, idx) => (
+      <div key={idx} ref={newestMessageRef}>
+        {msg.author}
+        :
+        {msg.text}
+      </div>
+    ))}
+  </div>
+);
 
 ChatMessagesList.propTypes = {
   messages: PropTypes.arrayOf(
